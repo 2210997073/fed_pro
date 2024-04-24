@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add to Cart Page</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: gray;
+}
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    background-color: lightgray;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: brown;
+}
+
+.product {
+    display:inline-block;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+}
+
+.add-to-cart-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#add-to-cart-btn:hover {
+    background-color: #45a049;
+}
+
+#cart {
+    
+    border: 1px solid #ccc;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+#total {
+    margin-top: 20px;
+}
+
+#total h3 {
+    color: #333;
+}
+
+#total-amount {
+    color: #4CAF50;
+    font-size: 20px;
+    font-weight: bold;
+}
+    </style>
+</head>
+<body>
+   
+    <script>
+         
+ const container = document.createElement('div');
+ container.classList.add('container');
+ const productsHeader = document.createElement('h2');
+ productsHeader.textContent = 'My Products';
+ const mac = createProduct('11 (1).jpg', 'Mac laptop',80000);
+ const iphone = createProduct('12 (1).jpg', 'i-phone', 70000);
+ const headph = createProduct('13 (1).jpg', 'head-phone', 2000);
+ const dell = createProduct('14 (1).jpg', 'dell-laptop',50000);
+ const speakerr = createProduct('15 (1).jpg', 'speaker',4800);
+ const hp = createProduct('16 (1).jpg', 'hp-laptop', 60000);
+ function createProduct(imageSrc, productName, price)
+ {
+     const productDiv = document.createElement('div');
+     productDiv.classList.add('product');
+     const image = document.createElement('img');
+     image.src = imageSrc;
+     productDiv.appendChild(image);
+     const nameParagraph = document.createElement('p');
+     nameParagraph.textContent = productName;
+     productDiv.appendChild(nameParagraph);
+     const priceParagraph = document.createElement('p');
+     priceParagraph.textContent = 'Price: $' + price;
+     productDiv.appendChild(priceParagraph);
+     const addToCartButton = document.createElement('button');
+     addToCartButton.textContent = 'Add to Cart';
+     addToCartButton.classList.add('add-to-cart-btn');
+     productDiv.appendChild(addToCartButton);
+ 
+     return productDiv;
+ }
+ 
+ const cartDiv = document.createElement('div');
+ cartDiv.id = 'cart';
+ 
+ const cartHeader = document.createElement('h2');
+ cartHeader.textContent = 'Cart';
+ 
+ const cartItemsList = document.createElement('ul');
+ cartItemsList.id = 'cart-items';
+ 
+ const totalDiv = document.createElement('div');
+ totalDiv.id = 'total';
+ 
+ const totalHeader = document.createElement('h3');
+ totalHeader.textContent = 'Total Amount:';
+ 
+ const totalAmountParagraph = document.createElement('p');
+ totalAmountParagraph.id  = 'total-amount';
+ totalAmountParagraph.textContent = '$0';
+ 
+ container.appendChild(productsHeader);
+ container.appendChild(mac);
+ container.appendChild(iphone);
+ container.appendChild(headph);
+ container.appendChild(dell);
+ container.appendChild(speakerr);
+ container.appendChild(hp);
+ container.appendChild(cartDiv);
+ cartDiv.appendChild(cartHeader);
+ cartDiv.appendChild(cartItemsList);
+ cartDiv.appendChild(totalDiv);
+ totalDiv.appendChild(totalHeader);
+ totalDiv.appendChild(totalAmountParagraph);
+ 
+ document.body.appendChild(container);
+ 
+ document.addEventListener("DOMContentLoaded", function() {
+     const addToCartBtns = document.querySelectorAll(".add-to-cart-btn");
+     const cartItemsList = document.getElementById("cart-items");
+     const totalAmountDisplay = document.getElementById("total-amount");
+ 
+     let totalAmount = 0;
+     let cartItems = {}; 
+ 
+     addToCartBtns.forEach(function(btn) {
+         btn.addEventListener("click", function() {
+             let productName = btn.parentElement.querySelector("p:nth-child(2)").textContent;
+             let productPrice = parseFloat(btn.parentElement.querySelector("p:nth-child(3)").textContent.split("$")[1]);
+ 
+             
+             if (productName in cartItems) {
+                 cartItems[productName].quantity++;
+                 cartItems[productName].element.textContent = productName + " - $" + productPrice.toFixed(2) + " x " + cartItems[productName].quantity;
+             } else {
+                 const listItem = document.createElement("li");
+                 listItem.textContent = productName + " - $" + productPrice.toFixed(2) + " x 1";
+                 const removeBtn = document.createElement("button");
+                 removeBtn.textContent = "Remove";
+                 removeBtn.classList.add("remove-btn");
+                 removeBtn.addEventListener("click", function() {
+                     cartItemsList.removeChild(listItem);
+                     totalAmount -= productPrice * cartItems[productName].quantity;
+                     totalAmountDisplay.textContent = "$" + totalAmount.toFixed(2);
+                     delete cartItems[productName];
+                 });
+ 
+                 listItem.appendChild(removeBtn);
+                 cartItemsList.appendChild(listItem);
+ 
+                 cartItems[productName] = {
+                     element: listItem,
+                     quantity: 1
+                 };
+             }
+             totalAmount += productPrice;
+             totalAmountDisplay.textContent = "$" + totalAmount.toFixed(2);
+         });
+     });
+ });
+    </script>
+  
+</body>
+</html>
